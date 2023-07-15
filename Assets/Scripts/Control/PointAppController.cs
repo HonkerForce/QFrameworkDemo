@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CounterApp;
+using QFramework.Example;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using QFrameworkTest;
 
-namespace CounterApp
+namespace PointApp
 {
     public class PointAppController : MonoBehaviour
     {
@@ -32,6 +35,12 @@ namespace CounterApp
             {
                 m_nEndCount = m_Cubes.Count;
             }
+            
+            GameStartEvent.RegisterTrigger(OnGameStart);
+
+            GamePassEvent.RegisterTrigger(OnGamePass);
+            
+            EnemyKillEvent.RegisterTrigger(OnEnemyKilled);
         }
         
         void Start()
@@ -63,6 +72,15 @@ namespace CounterApp
             }
         }
 
+        void OnDestroy()
+        {
+            GameStartEvent.UnRegisterTrigger(OnGameStart);
+
+            GamePassEvent.UnRegisterTrigger(OnGamePass);
+            
+            EnemyKillEvent.UnRegisterTrigger(OnEnemyKilled);
+        }
+
         void InitCube()
         {
             if (m_Cubes != null)
@@ -73,10 +91,24 @@ namespace CounterApp
                 }
             }
 
-            m_nCount = 0;
+            PointAppModel.nCount = 0;
         }
 
         public void OnClicked_StartBtn()
+        {
+            GameStartEvent.Trigger();
+        }
+
+        public void OnClicked_Cube(RectTransform cube)
+        {
+            if (cube != null)
+            {
+                cube.gameObject.SetActive(false);
+                EnemyKillEvent.Trigger();
+            }
+        }
+
+        private void OnGameStart()
         {
             InitCube();
 
@@ -86,25 +118,25 @@ namespace CounterApp
             }
         }
 
-        public void OnClicked_Cube(RectTransform cube)
+        private void OnGamePass()
         {
-            if (cube != null)
+            if (m_MainCanvas != null)
             {
-                m_nCount++;
-                cube.gameObject.SetActive(false);
-            }
+                m_MainCanvas.gameObject.SetActive(true);
 
-            if (m_nCount >= m_nEndCount)
-            {
-                if (m_MainCanvas != null)
+                if (m_btnText != null)
                 {
-                    m_MainCanvas.gameObject.SetActive(true);
-
-                    if (m_btnText != null)
-                    {
-                        m_btnText.text = "Again";
-                    }
+                    m_btnText.text = "Again";
                 }
+            }
+        }
+
+        private void OnEnemyKilled()
+        {
+            PointAppModel.nCount++;
+            if (PointAppModel.nCount >= m_nEndCount)
+            {
+                GamePassEvent.Trigger();
             }
         }
     }
