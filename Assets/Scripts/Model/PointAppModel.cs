@@ -1,7 +1,14 @@
-﻿namespace CounterApp
+﻿using QFrameworkTest;
+
+namespace CounterApp
 {
-    public class PointAppModel
+    public class PointAppModel : Singleton<PointAppModel>
     {
-        public static int nCount = 0;
+        PointAppModel()
+        {
+            
+        }
+        
+        public BindableProperty<int> count = new();
     }
 }

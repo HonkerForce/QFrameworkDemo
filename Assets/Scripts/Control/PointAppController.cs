@@ -5,7 +5,7 @@ using QFramework.Example;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 using QFrameworkTest;
 
 namespace PointApp
@@ -14,13 +14,10 @@ namespace PointApp
     {
         public Camera m_MainCamera;
         public Canvas m_MainCanvas = null;
+        public Button startBtn = null;
         public TextMeshProUGUI m_btnText = null;
         public GameObject m_CubeParentObj = null;
         private List<BoxCollider> m_Cubes = null;
-        private bool m_bStart = false;
-        private int m_nCount = 0;
-
-        private int m_nEndCount = 0;
 
         void Awake()
         {
@@ -31,16 +28,19 @@ namespace PointApp
             }
 
             m_Cubes = m_CubeParentObj.GetComponentsInChildren<BoxCollider>().ToList();
-            if (m_Cubes != null)
+
+            if (startBtn != null)
             {
-                m_nEndCount = m_Cubes.Count;
+                startBtn.onClick.AddListener(() =>
+                {
+                    new PointStartCommand().Execute();
+                });
             }
-            
+
             GameStartEvent.RegisterTrigger(OnGameStart);
 
             GamePassEvent.RegisterTrigger(OnGamePass);
             
-            EnemyKillEvent.RegisterTrigger(OnEnemyKilled);
         }
         
         void Start()
@@ -66,7 +66,9 @@ namespace PointApp
                 {
                     if (hit.transform != null)
                     {
-                        OnClicked_Cube((RectTransform)hit.transform);
+                        hit.transform.gameObject.SetActive(false);
+                        
+                        new CubeKilledCommand().Execute();
                     }
                 }
             }
@@ -78,7 +80,6 @@ namespace PointApp
 
             GamePassEvent.UnRegisterTrigger(OnGamePass);
             
-            EnemyKillEvent.UnRegisterTrigger(OnEnemyKilled);
         }
 
         void InitCube()
@@ -91,21 +92,7 @@ namespace PointApp
                 }
             }
 
-            PointAppModel.nCount = 0;
-        }
-
-        public void OnClicked_StartBtn()
-        {
-            GameStartEvent.Trigger();
-        }
-
-        public void OnClicked_Cube(RectTransform cube)
-        {
-            if (cube != null)
-            {
-                cube.gameObject.SetActive(false);
-                EnemyKillEvent.Trigger();
-            }
+            PointAppModel.Instance.count.Value = 0;
         }
 
         private void OnGameStart()
@@ -128,15 +115,6 @@ namespace PointApp
                 {
                     m_btnText.text = "Again";
                 }
-            }
-        }
-
-        private void OnEnemyKilled()
-        {
-            PointAppModel.nCount++;
-            if (PointAppModel.nCount >= m_nEndCount)
-            {
-                GamePassEvent.Trigger();
             }
         }
     }

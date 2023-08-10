@@ -10,18 +10,6 @@ namespace CounterApp
 {
     public class CounterAppController : MonoBehaviour
     {
-        private int m_nCount = 0;
-
-        public int Count
-        {
-            get => m_nCount;
-            set
-            {
-                m_nCount = Math.Max(0, value);
-                ShowCount();
-            }
-        }
-
         public UnityEngine.UI.Button m_btnAdd;
         public UnityEngine.UI.Button m_btnSub;
         public TMP_Text m_txtCount;
@@ -31,14 +19,22 @@ namespace CounterApp
             if (m_btnAdd != null)
             {
                 m_btnAdd.onClick.RemoveAllListeners();
-                m_btnAdd.onClick.AddListener(OnClick_Add);
+                m_btnAdd.onClick.AddListener(() =>
+                {
+                    new CountAddCommand().Execute();
+                });
             }
 
             if (m_btnSub != null)
             {
                 m_btnSub.onClick.RemoveAllListeners();
-                m_btnSub.onClick.AddListener(OnClick_Sub);
+                m_btnSub.onClick.AddListener(() =>
+                {
+                    new CountSubCommand().Execute();
+                });
             }
+            
+            CounterAppModel.Instance.count.OnValueChanged += ShowCount;
         }
 
         public void OnEnable()
@@ -46,23 +42,16 @@ namespace CounterApp
             ShowCount();
         }
 
-        public void OnClick_Add()
+        public void OnDestroy()
         {
-            Count++;
-            // ShowCount();
-        }
-
-        public void OnClick_Sub()
-        {
-            Count--;
-            // ShowCount();
+            CounterAppModel.Instance.count.OnValueChanged -= ShowCount;
         }
 
         public void ShowCount()
         {
             if (m_txtCount != null)
             {
-                m_txtCount.text = Count.ToString();
+                m_txtCount.text = CounterAppModel.Instance.count.Value.ToString();
             }
         }
     }

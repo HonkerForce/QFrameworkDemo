@@ -1,19 +1,13 @@
 ﻿using QFrameworkTest;
 namespace CounterApp
 {
-    public class CounterAppModel : Model<int>
+    public class CounterAppModel : Singleton<CounterAppModel>
     {
-        public override int Value
+        CounterAppModel()
         {
-            get => m_value;
-            set
-            {
-                m_value = value;
-                if (OnValueChanged != null)
-                {
-                    OnValueChanged(m_value);
-                }
-            }
+            
         }
+        
+        public BindableProperty<int> count = new();
     }
 }

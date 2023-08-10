@@ -1052,6 +1052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MainCamera: {fileID: 1613524998}
   m_MainCanvas: {fileID: 278680085}
+  startBtn: {fileID: 650575132}
   m_btnText: {fileID: 691505120}
   m_CubeParentObj: {fileID: 783518286}
 --- !u!1 &842744742
