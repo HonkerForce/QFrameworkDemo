@@ -92,7 +92,7 @@ namespace PointApp
                 }
             }
 
-            PointAppModel.Instance.count.Value = 0;
+            PointGame.Get<IPointAppModel>().count.Value = 0;
         }
 
         private void OnGameStart()

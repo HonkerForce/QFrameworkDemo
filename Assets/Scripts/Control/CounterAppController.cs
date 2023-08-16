@@ -34,24 +34,24 @@ namespace CounterApp
                 });
             }
             
-            CounterAppModel.Instance.count.OnValueChanged += ShowCount;
+            CounterGame.Get<ICounterAppModel>().count.OnValueChanged += ShowCount;
         }
 
         public void OnEnable()
         {
-            ShowCount();
+            // ShowCount(0);
         }
 
         public void OnDestroy()
         {
-            CounterAppModel.Instance.count.OnValueChanged -= ShowCount;
+            CounterGame.Get<ICounterAppModel>().count.OnValueChanged -= ShowCount;
         }
 
-        public void ShowCount()
+        public void ShowCount(int count)
         {
             if (m_txtCount != null)
             {
-                m_txtCount.text = CounterAppModel.Instance.count.Value.ToString();
+                m_txtCount.text = count.ToString();
             }
         }
     }

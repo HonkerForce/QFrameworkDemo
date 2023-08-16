@@ -10,9 +10,8 @@ namespace QFrameworkTest
             get => value;
             set
             {
+                OnValueChanged?.Invoke(value);
                 this.value = value;
-                
-                OnValueChanged?.Invoke();
             }
         }
 
@@ -21,6 +20,6 @@ namespace QFrameworkTest
             value = default;
         }
 
-        public Action OnValueChanged = null;
+        public Action<T> OnValueChanged = null;
     }
 }

@@ -1,14 +1,21 @@
 ﻿using QFrameworkTest;
 
-namespace CounterApp
+namespace PointApp
 {
-    public class PointAppModel : Singleton<PointAppModel>
+    public interface IPointAppModel : IModel
     {
-        PointAppModel()
+        BindableProperty<int> count { get; }
+    }
+    
+    public class PointAppModel : IPointAppModel
+    {
+        public BindableProperty<int> count { get; } = new();
+        
+        public IArchitecture architecture { get; set; }
+        
+        public void Init()
         {
             
         }
-        
-        public BindableProperty<int> count = new();
     }
 }

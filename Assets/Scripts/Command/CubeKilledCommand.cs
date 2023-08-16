@@ -6,9 +6,10 @@ namespace PointApp
     {
         public void Execute()
         {
-            PointAppModel.Instance.count.Value++;
+            var model = PointGame.Get<IPointAppModel>();
+            model.count.Value++;
             
-            if (PointAppModel.Instance.count.Value >= 9)
+            if (model.count.Value >= 9)
             {
                 GamePassEvent.Trigger();
             }

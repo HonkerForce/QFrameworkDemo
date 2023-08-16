@@ -6,7 +6,7 @@ namespace CounterApp
     {
         public void Execute()
         {
-            CounterAppModel.Instance.count.Value++;
+            CounterGame.Get<ICounterAppModel>().count.Value++;
         }
     }
 }

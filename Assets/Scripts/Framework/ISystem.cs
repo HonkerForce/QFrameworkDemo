@@ -1,6 +1,6 @@
 ﻿namespace QFrameworkTest
 {
-    public interface IModel : IBelongToArchitecture
+    public interface ISystem : IBelongToArchitecture
     {
         void Init();
     }
